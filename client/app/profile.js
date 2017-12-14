@@ -19,7 +19,7 @@ const handleBlurb = (e) => {
   e.preventDefault();
   
   sendAjax("POST", $("#profile").attr("action"), $("#profile").serialize(), function(){
-    loadBlurbFromServer();
+    loadProfileFromServer();
   });
   
   return false;
@@ -87,8 +87,27 @@ const PostList = (props) => {
   );
 };
 
+const createProfileWindow = (csrf) => {
+  console.log('createProfile');
+  
+  ReactDOM.render(
+    <Profile csrf={csrf} />, document.querySelector("#header")
+  );
+
+  ReactDOM.render(
+    <PostForm csrf={csrf} />, document.querySelector("#form")
+  );
+
+  ReactDOM.render(
+    <PostList posts={[]} />, document.querySelector("#content")
+  );
+
+  loadPostsFromServer();
+};
+  
 //get the posts associated with your account
 const loadPostsFromServer = () => {
+  
   sendAjax("GET", "/getPosts", null, (data) => {
     ReactDOM.render(
     <PostList posts={data.posts} />, document.querySelector("#content")
@@ -98,37 +117,10 @@ const loadPostsFromServer = () => {
 
 //get your account info- username, blurb. mostly blurb.
 const loadProfileFromServer = () => {
+  console.log()
   sendAjax("GET", "/blurb", null, (data) => {
-    reactDOM.render(
-      <Profile csrf={csrf} />, document.querySelector("#header")
+    ReactDOM.render(
+      <Profile />, document.querySelector("#header")
     );
   });
 };
-
-//initialize application
-const setup = function(csrf) {
-  ReactDOM.render(
-    <Profile csrf={csrf} />, document.querySelector("#header")
-  );
-  
-  ReactDOM.render(
-    <PostForm csrf={csrf} />, document.querySelector("#form")
-  );
-  
-  ReactDOM.render(
-    <PostList posts={[]} />, document.querySelector("#content")
-  );
-  
-  loadPostsFromServer();
-};
-
-//prevent csrf. init app.
-const getToken = () => {
-  sendAjax("GET", '/getToken', null, (result) => {
-    setup(result.csrfToken);
-  });
-};
-
-$(document).ready(function() {
-  getToken();
-});

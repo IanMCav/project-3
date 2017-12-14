@@ -10,7 +10,7 @@ const userPage = (req, res) => {
       return res.status(400).json({ error: 'An error occured!' });
     }
 
-    return res.render('app', { csrfToken: req.csrfToken(), Posts: docs });
+    return res.render('app', { csrfToken: req.csrfToken(), Posts: docs});
   });
 };
 
@@ -61,7 +61,7 @@ const getPosts = (request, response) => {
   const req = request;
   const res = response;
 
-  if (req.body.searchUsername === '') {
+  if (req.body.searchUsername) {
     return Post.PostModel.findByAuthor(req.body.searchUsername, (err, docs) => {
       if (err) {
         console.log(err);
@@ -81,6 +81,21 @@ const getPosts = (request, response) => {
   });
 };
 
+const homePage = (req, res) => {
+  Post.PostModel.findByDate(Date.now(), (err, docs) => {
+    if(err) {
+      console.log(err);
+      
+      return res.status(400).json({ error: "an error has occurred"});
+    };
+    
+    console.log(docs);
+    
+    return res.render('app', {csrfToken: req.csrfToken(), contents: docs});
+  });
+};
+
 module.exports.userPage = userPage;
 module.exports.getPosts = getPosts;
 module.exports.new = makePost;
+module.exports.homePage = homePage;

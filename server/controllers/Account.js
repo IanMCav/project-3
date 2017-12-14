@@ -86,32 +86,67 @@ const getBlurb = (request, response) => {
   const req = request;
   const res = response;
 
-  if (req.body.searchUsername === '') {
+  
+  if (req.body.searchUsername) {
     return Account.AccountModel.findByUsername(req.body.searchUsername, (err, docs) => {
       if (err) {
         console.log(err);
         return res.status(400).json({ error: 'an error occurred' });
       }
 
-      console.log(docs);
-
-      return res.json({ blurb: docs });
+      return res.json({ username: docs.username, blurb: docs.blurb });
     });
   }
+  
   return Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'an error occurred' });
     }
 
-    console.log(docs);
-
-    return res.json({ blurb: docs });
+    return res.json({ username: docs.username, blurb: docs.blurb });
   });
 };
 
-// would update the account's profile blurb
-const setBlurb = () => false;
+const changePassword = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const username = req.session.account.username;
+
+  const myAcc = Account.AccountModel.findByUsername(username, null);
+
+  myAcc.password = request.body.newPass;
+
+  const changePromise = myAcc.save();
+
+  changePromise.then(() => {
+    res.json({ redirect: '/profile' });
+  });
+
+  changePromise.catch((err) => {
+    console.log(err);
+
+    return res.status(400).json({ error: 'An error occurred' });
+  });
+};
+
+// update the account's profile blurb
+const setBlurb = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const name = req.session.account.username;
+
+  Account.AccountModel.update({ username: name }, { blurb: req.body.theBlurb }, null, (err) => {
+    if (err) {
+      console.log(err);
+
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+    return res.status(200).json({ body: 'blurb updated!' });
+  });
+};
 
 // get the csrf token.
 const getToken = (request, response) => {
@@ -132,3 +167,4 @@ module.exports.signup = signup;
 module.exports.getToken = getToken;
 module.exports.getBlurb = getBlurb;
 module.exports.setBlurb = setBlurb;
+module.exports.changePassword = changePassword;

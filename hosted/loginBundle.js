@@ -1,4 +1,5 @@
 "use strict";
+"use strict";
 
 //validate login, log user in, create csrf
 var handleLogin = function handleLogin(e) {

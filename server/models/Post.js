@@ -42,6 +42,14 @@ PostSchema.statics.findByAuthor = (username, callback) => {
     .exec(callback);
 };
 
+PostSchema.statics.findByDate = (date, callback) => {
+  const search = {
+    createdData : {$gt: date - 300000000000, $lt: date},
+  };
+  
+  return PostModel.find(search).sort({ createdData: -1, username: -1 }).select('contents author').exec(callback);
+}
+
 PostModel = mongoose.model('Post', PostSchema);
 
 module.exports.PostModel = PostModel;

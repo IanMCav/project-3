@@ -1,4 +1,53 @@
 "use strict";
+"use strict";
+
+var createHomeWindow = function createHomeWindow() {
+
+  ReactDOM.render(React.createElement("div", null), document.querySelector("#header"));
+
+  ReactDOM.render(React.createElement("div", null), document.querySelector("#form"));
+
+  ReactDOM.render(React.createElement(HomeBody, null), document.querySelector("#content"));
+
+  loadAllPosts();
+};
+
+var HomeBody = function HomeBody(props) {
+  var homeNodes = props.content.map(function (post) {
+    return React.createElement(
+      "div",
+      { key: post._id, className: "post" },
+      React.createElement(
+        "pre",
+        null,
+        React.createElement(
+          "h1",
+          null,
+          post.author
+        ),
+        React.createElement(
+          "p",
+          null,
+          post.contents
+        )
+      )
+    );
+  });
+
+  return React.createElement(
+    "div",
+    { classNames: "homeBody" },
+    postNodes
+  );
+};
+
+var loadAllPosts = function loadAllPosts() {
+
+  sendAjax("GET", "/home", null, function (data) {
+    ReactDOM.render(React.createElement("homeBody", { content: data.content }), document.querySelector("#content"));
+  });
+};
+"use strict";
 
 //make a new post to the database
 var handlePost = function handlePost(e) {
@@ -21,7 +70,7 @@ var handleBlurb = function handleBlurb(e) {
   e.preventDefault();
 
   sendAjax("POST", $("#profile").attr("action"), $("#profile").serialize(), function () {
-    loadBlurbFromServer();
+    loadProfileFromServer();
   });
 
   return false;
@@ -110,22 +159,9 @@ var PostList = function PostList(props) {
   );
 };
 
-//get the posts associated with your account
-var loadPostsFromServer = function loadPostsFromServer() {
-  sendAjax("GET", "/getPosts", null, function (data) {
-    ReactDOM.render(React.createElement(PostList, { posts: data.posts }), document.querySelector("#content"));
-  });
-};
+var createProfileWindow = function createProfileWindow(csrf) {
+  console.log('createProfile');
 
-//get your account info- username, blurb. mostly blurb.
-var loadProfileFromServer = function loadProfileFromServer() {
-  sendAjax("GET", "/blurb", null, function (data) {
-    reactDOM.render(React.createElement(Profile, { csrf: csrf }), document.querySelector("#header"));
-  });
-};
-
-//initialize application
-var setup = function setup(csrf) {
   ReactDOM.render(React.createElement(Profile, { csrf: csrf }), document.querySelector("#header"));
 
   ReactDOM.render(React.createElement(PostForm, { csrf: csrf }), document.querySelector("#form"));
@@ -133,6 +169,47 @@ var setup = function setup(csrf) {
   ReactDOM.render(React.createElement(PostList, { posts: [] }), document.querySelector("#content"));
 
   loadPostsFromServer();
+};
+
+//get the posts associated with your account
+var loadPostsFromServer = function loadPostsFromServer() {
+
+  sendAjax("GET", "/getPosts", null, function (data) {
+    ReactDOM.render(React.createElement(PostList, { posts: data.posts }), document.querySelector("#content"));
+  });
+};
+
+//get your account info- username, blurb. mostly blurb.
+var loadProfileFromServer = function loadProfileFromServer() {
+  console.log();
+  sendAjax("GET", "/blurb", null, function (data) {
+    ReactDOM.render(React.createElement(Profile, null), document.querySelector("#header"));
+  });
+};
+"use strict";
+
+//initialize application
+var setup = function setup(csrf, e) {
+  var changePWButton = document.querySelector("#pwChangeButton");
+  var homeButton = document.querySelector("#homeButton");
+  var profileButton = document.querySelector("#profileButton");
+  var searchButton = document.querySelector("#searchButton");
+
+  profileButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createProfileWindow(csrf);
+    return false;
+  });
+
+  homeButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createHomeWindow();
+    return false;
+  });
+
+  e.preventDefault();
+  createHomeWindow();
+  return false;
 };
 
 //prevent csrf. init app.
