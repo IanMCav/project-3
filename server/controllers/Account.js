@@ -108,6 +108,7 @@ const getBlurb = (request, response) => {
   });
 };
 
+//self-explanitory
 const changePassword = (request, response) => {
   const req = request;
   const res = response;
@@ -131,7 +132,7 @@ const changePassword = (request, response) => {
   });
 };
 
-// update the account's profile blurb
+// update the account's profile blurb (does in fact work, but doesn't display properly since I have been able to set up anything to grab account data client-side yet)
 const setBlurb = (request, response) => {
   const req = request;
   const res = response;

@@ -38,14 +38,18 @@ PostSchema.statics.findByAuthor = (username, callback) => {
     author: username,
   };
 
+  console.log(PostModel.find(search));
+  
   return PostModel.find(search).sort({ createdData: -1 }).select('contents author')
     .exec(callback);
 };
 
 PostSchema.statics.findByDate = (date, callback) => {
   const search = {
-    createdData : {$gt: date - 300000000000, $lt: date},
+    createdData : {$gt: date - 30000000000},
   };
+  
+  console.log(PostModel.find(search))
   
   return PostModel.find(search).sort({ createdData: -1, username: -1 }).select('contents author').exec(callback);
 }

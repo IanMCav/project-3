@@ -1,5 +1,5 @@
-//initialize application
-const setup = function(csrf, e) {
+//Sets up main app buttons, allowing for easy transitions between pages
+const setup = function(csrf) {
   const changePWButton = document.querySelector("#pwChangeButton");
   const homeButton = document.querySelector("#homeButton");
   const profileButton = document.querySelector("#profileButton");
@@ -17,7 +17,6 @@ const setup = function(csrf, e) {
     return false;
   });
   
-  e.preventDefault();
   createHomeWindow();
   return false;
 };

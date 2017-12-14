@@ -1,6 +1,7 @@
 "use strict";
 "use strict";
 
+//function to render the elements needed for this page.
 var createHomeWindow = function createHomeWindow() {
 
   ReactDOM.render(React.createElement("div", null), document.querySelector("#header"));
@@ -12,8 +13,9 @@ var createHomeWindow = function createHomeWindow() {
   loadAllPosts();
 };
 
+//this should return all posts in the database within a certain date, I don't know why it doesn't
 var HomeBody = function HomeBody(props) {
-  var homeNodes = props.content.map(function (post) {
+  var homeNodes = props.posts.map(function (post) {
     return React.createElement(
       "div",
       { key: post._id, className: "post" },
@@ -37,14 +39,14 @@ var HomeBody = function HomeBody(props) {
   return React.createElement(
     "div",
     { classNames: "homeBody" },
-    postNodes
+    homeNodes
   );
 };
 
+//get the data from the server.
 var loadAllPosts = function loadAllPosts() {
-
   sendAjax("GET", "/home", null, function (data) {
-    ReactDOM.render(React.createElement("homeBody", { content: data.content }), document.querySelector("#content"));
+    ReactDOM.render(React.createElement(HomeBody, { posts: data.posts }), document.querySelector("#content"));
   });
 };
 "use strict";
@@ -159,6 +161,7 @@ var PostList = function PostList(props) {
   );
 };
 
+//render the elements for this page
 var createProfileWindow = function createProfileWindow(csrf) {
   console.log('createProfile');
 
@@ -181,15 +184,14 @@ var loadPostsFromServer = function loadPostsFromServer() {
 
 //get your account info- username, blurb. mostly blurb.
 var loadProfileFromServer = function loadProfileFromServer() {
-  console.log();
   sendAjax("GET", "/blurb", null, function (data) {
     ReactDOM.render(React.createElement(Profile, null), document.querySelector("#header"));
   });
 };
 "use strict";
 
-//initialize application
-var setup = function setup(csrf, e) {
+//Sets up main app buttons, allowing for easy transitions between pages
+var setup = function setup(csrf) {
   var changePWButton = document.querySelector("#pwChangeButton");
   var homeButton = document.querySelector("#homeButton");
   var profileButton = document.querySelector("#profileButton");
@@ -207,7 +209,6 @@ var setup = function setup(csrf, e) {
     return false;
   });
 
-  e.preventDefault();
   createHomeWindow();
   return false;
 };

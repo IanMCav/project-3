@@ -87,6 +87,7 @@ const PostList = (props) => {
   );
 };
 
+//render the elements for this page
 const createProfileWindow = (csrf) => {
   console.log('createProfile');
   
@@ -117,7 +118,6 @@ const loadPostsFromServer = () => {
 
 //get your account info- username, blurb. mostly blurb.
 const loadProfileFromServer = () => {
-  console.log()
   sendAjax("GET", "/blurb", null, (data) => {
     ReactDOM.render(
       <Profile />, document.querySelector("#header")

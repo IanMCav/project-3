@@ -81,6 +81,7 @@ const getPosts = (request, response) => {
   });
 };
 
+//set up data for the main page
 const homePage = (req, res) => {
   Post.PostModel.findByDate(Date.now(), (err, docs) => {
     if(err) {
@@ -89,9 +90,7 @@ const homePage = (req, res) => {
       return res.status(400).json({ error: "an error has occurred"});
     };
     
-    console.log(docs);
-    
-    return res.render('app', {csrfToken: req.csrfToken(), contents: docs});
+    return res.json({posts: docs });
   });
 };
 
