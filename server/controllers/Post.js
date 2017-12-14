@@ -10,7 +10,7 @@ const userPage = (req, res) => {
       return res.status(400).json({ error: 'An error occured!' });
     }
 
-    return res.render('app', { csrfToken: req.csrfToken(), Posts: docs});
+    return res.render('app', { csrfToken: req.csrfToken(), Posts: docs });
   });
 };
 
@@ -81,16 +81,16 @@ const getPosts = (request, response) => {
   });
 };
 
-//set up data for the main page
+// set up data for the main page
 const homePage = (req, res) => {
   Post.PostModel.findByDate(Date.now(), (err, docs) => {
-    if(err) {
+    if (err) {
       console.log(err);
-      
-      return res.status(400).json({ error: "an error has occurred"});
-    };
-    
-    return res.json({posts: docs });
+
+      return res.status(400).json({ error: 'an error has occurred' });
+    }
+
+    return res.json({ posts: docs });
   });
 };
 

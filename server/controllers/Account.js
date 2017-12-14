@@ -86,7 +86,7 @@ const getBlurb = (request, response) => {
   const req = request;
   const res = response;
 
-  
+
   if (req.body.searchUsername) {
     return Account.AccountModel.findByUsername(req.body.searchUsername, (err, docs) => {
       if (err) {
@@ -97,7 +97,7 @@ const getBlurb = (request, response) => {
       return res.json({ username: docs.username, blurb: docs.blurb });
     });
   }
-  
+
   return Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
     if (err) {
       console.log(err);
@@ -108,7 +108,7 @@ const getBlurb = (request, response) => {
   });
 };
 
-//self-explanitory
+// self-explanitory
 const changePassword = (request, response) => {
   const req = request;
   const res = response;
@@ -132,7 +132,8 @@ const changePassword = (request, response) => {
   });
 };
 
-// update the account's profile blurb (does in fact work, but doesn't display properly since I have been able to set up anything to grab account data client-side yet)
+// update the account's profile blurb (does in fact work, but doesn't display properly
+// since I have been able to set up anything to grab account data client-side yet)
 const setBlurb = (request, response) => {
   const req = request;
   const res = response;

@@ -39,20 +39,21 @@ PostSchema.statics.findByAuthor = (username, callback) => {
   };
 
   console.log(PostModel.find(search));
-  
+
   return PostModel.find(search).sort({ createdData: -1 }).select('contents author')
     .exec(callback);
 };
 
 PostSchema.statics.findByDate = (date, callback) => {
   const search = {
-    createdData : {$gt: date - 30000000000},
+    createdData: { $gt: date - 30000000000 },
   };
-  
-  console.log(PostModel.find(search))
-  
-  return PostModel.find(search).sort({ createdData: -1, username: -1 }).select('contents author').exec(callback);
-}
+
+  console.log(PostModel.find(search));
+
+  return PostModel.find(search).sort({ createdData: -1, username: -1 }).select('contents author')
+    .exec(callback);
+};
 
 PostModel = mongoose.model('Post', PostSchema);
 
